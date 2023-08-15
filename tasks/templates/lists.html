@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>To-Do</title>
+    <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <div class="container">
+    <h1>To-Do or Not-ToDo</h1>
+    <hr>
+    <div class="main">
+    
+    <!-- Create Task Form -->
+    
+    <form method="POST" action="/">
+        {% csrf_token %}
+        {{ form.title }}
+        <button type="submit">Create Task</button>
+    </form>
+
+    <!-- List of Tasks -->
+    
+    {% for task in tasks %}
+        <div class="task">
+            {% if task.complete == True %}
+                <strike><b>{{ task.title }}</b></strike>
+            {% else %}
+                <b>{{ task.title }}</b>
+                <!-- <span class="dt">{{ task.created }}</span> -->
+            {% endif %}
+            <span><a href="{% url 'update_task' task.id %}">Update</a>
+            <a href="{% url 'deletions' task.id %}">Delete</a></span>
+        </div>
+    {% endfor %}
+    </div>  
+</div>
+    <!-- Footer -->
+    <hr>
+    <div class="sub-footer"><span>By Osama <sub>2023</sub></span></div>
+    <hr>
+</body>
+</html>
