@@ -1,12 +1,16 @@
+from django.urls import reverse
+from rest_framework import viewsets
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from .models import Task
+from .forms import TaskForm
+from .serializers import TaskSerializer
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
 
-from . models import *
-from . forms import *
-# Create your views here.
+# Your existing views for rendering templates
 def index(request):
     tasks = Task.objects.all()
-    form= TaskForm()
+    form = TaskForm()
 
     if request.method == 'POST':
         form = TaskForm(request.POST)
@@ -18,7 +22,6 @@ def index(request):
 
 def updateTask(request, pk):
     task = Task.objects.get(id=pk)
-
     form = TaskForm(instance=task)
 
     if request.method == 'POST':
@@ -36,5 +39,15 @@ def deleteTask(request, pk):
         item.delete()
         return redirect('/')
     context = {'item': item}
-
     return render(request, 'deletions.html', context)
+
+# # API viewset for tasks
+# class TaskViewSet(viewsets.ModelViewSet):
+#     queryset = Task.objects.all()
+#     serializer_class = TaskSerializer
+
+# @api_view(['GET'])
+# def api_root(request, format=None):
+#     return Response({
+#         'tasks': reverse('task-list', request=request, format=format),
+#     })
